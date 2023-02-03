@@ -21,6 +21,7 @@ type Generator struct {
 	Upper        bool
 	Prefix       string
 	Suffix       string
+	Separator    string
 	WithLineFeed bool
 }
 
@@ -80,6 +81,10 @@ func (g *Generator) Gen(writer io.Writer, count, length int) error {
 
 		builder.Reset()
 
+		if i > 0 {
+			builder.WriteString(g.Separator)
+		}
+
 		if g.Prefix != "" {
 			builder.WriteString(g.Prefix)
 		}
@@ -99,10 +104,6 @@ func (g *Generator) Gen(writer io.Writer, count, length int) error {
 			builder.WriteString(g.Suffix)
 		}
 
-		if g.WithLineFeed {
-			builder.WriteByte('\n')
-		}
-
 		switch {
 		case g.Lower:
 			fmt.Fprint(writer, strings.ToLower(builder.String()))
@@ -111,6 +112,10 @@ func (g *Generator) Gen(writer io.Writer, count, length int) error {
 		default:
 			fmt.Fprint(writer, builder.String())
 		}
+	}
+
+	if g.WithLineFeed {
+		fmt.Fprint(writer, "\n")
 	}
 
 	return nil

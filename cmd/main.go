@@ -29,6 +29,7 @@ var mainCmd = &cobra.Command{
 			Upper:        viper.GetBool("upper"),
 			Prefix:       viper.GetString("prefix"),
 			Suffix:       viper.GetString("suffix"),
+			Separator:    viper.GetString("separator"),
 			WithLineFeed: (stdoutStat.Mode() & os.ModeCharDevice) == os.ModeCharDevice,
 		}
 
@@ -73,6 +74,11 @@ func init() {
 
 	mainCmd.PersistentFlags().String("prefix", "", "Write prefix before each generated string.")
 	if err := viper.BindPFlag("prefix", mainCmd.PersistentFlags().Lookup("prefix")); err != nil {
+		panic(err)
+	}
+
+	mainCmd.PersistentFlags().StringP("separator", "s", "\n", "Separator for generated strings.")
+	if err := viper.BindPFlag("separator", mainCmd.PersistentFlags().Lookup("separator")); err != nil {
 		panic(err)
 	}
 
